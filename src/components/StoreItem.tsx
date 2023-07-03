@@ -27,6 +27,7 @@ export function StoreItem({
   return (
     <Card className="h-100">
       <Card.Img
+        className="py-3"
         onClick={siteSelectedCallback}
         variant="top"
         src={image}
