@@ -25,7 +25,6 @@ export function useStoreItems() {
 
 export function StoreItemsProvider({ children }: StoreItemsProviderProps) {
   const [storeItems, setStoreItems] = useState<StoreItemProps[]>([]);
-  const [error, setError] = useState({});
 
   const fetchItemData = () => {
     fetch("https://fakestoreapi.com/products")
@@ -35,7 +34,7 @@ export function StoreItemsProvider({ children }: StoreItemsProviderProps) {
       .then((data) => {
         setStoreItems(data);
       })
-      .catch((err) => setError(err));
+      .catch((err) => console.log("Error: ", err));
   };
 
   useEffect(() => {

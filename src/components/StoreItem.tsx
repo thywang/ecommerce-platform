@@ -11,13 +11,7 @@ export type StoreItemProps = {
   image: string;
 };
 
-export function StoreItem({
-  id,
-  title,
-  price,
-  description,
-  image,
-}: StoreItemProps) {
+export function StoreItem({ id, title, price, image }: StoreItemProps) {
   const navigate = useNavigate();
 
   const siteSelectedCallback = () => {
@@ -43,7 +37,7 @@ export function StoreItem({
           >
             {title}
           </span>
-          <span className="ms-2 text-muted">{formatCurrency(price)}</span>
+          <span className="ms-2 me-1 text-muted">{formatCurrency(price)}</span>
         </Card.Title>
         <div className="mt-auto">
           <AddItem id={id} />

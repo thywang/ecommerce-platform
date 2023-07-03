@@ -57,7 +57,7 @@ export default function Register() {
       };
       axios
         .post(signupUrl, requestBody, requestConfig)
-        .then((response) => {
+        .then((_response) => {
           setErrorMessage(null);
           alert("Sign up successful");
         })

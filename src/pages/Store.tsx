@@ -1,4 +1,4 @@
-import { Col, Row, Dropdown, Form } from "react-bootstrap";
+import { Col, Row, Dropdown } from "react-bootstrap";
 import { useStoreItems } from "../context/StoreItemsContext";
 import { StoreItem } from "../components/StoreItem";
 import { getUser } from "../service/AuthService";
