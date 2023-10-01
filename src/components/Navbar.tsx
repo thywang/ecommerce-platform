@@ -1,16 +1,33 @@
 import "../style/svg.css";
+import { useEffect, useState } from "react";
 import { Container, Nav, Navbar as NavbarBs, Button } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { useShoppingCart } from "../context/ShoppingCartContext";
-import { resetUserSession } from "../service/AuthService";
+import { resetUserSession, getUser } from "../service/AuthService";
 
 export function Navbar() {
   const { openCart, cartQuantity } = useShoppingCart();
+  const [isAuthed, setIsAuthed] = useState(false);
+  const [showCartButton, setShowCartButton] = useState(true);
+
+  useEffect(() => {
+    const user = getUser();
+    const userExists = user !== "undefined" && user;
+    setIsAuthed(userExists);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    setShowCartButton((_currValue) => {
+      return !(
+        location.pathname.toLowerCase().includes("login") ||
+        location.pathname.toLowerCase().includes("signup")
+      );
+    });
+  }, [location.pathname]);
 
   return (
     <NavbarBs sticky="top" className="bg-white shadow-sm mb-3">
       <Container>
-        {/* Log Out */}
         <Nav className="me-auto">
           <Nav.Link
             onClick={() => {
@@ -19,15 +36,31 @@ export function Navbar() {
             to="/login"
             as={NavLink}
           >
-            <svg className="svg-icon" viewBox="0 0 20 20">
-              <path
-                fill="none"
-                d="M15.898,4.045c-0.271-0.272-0.713-0.272-0.986,0l-4.71,4.711L5.493,4.045c-0.272-0.272-0.714-0.272-0.986,0s-0.272,0.714,0,0.986l4.709,4.711l-4.71,4.711c-0.272,0.271-0.272,0.713,0,0.986c0.136,0.136,0.314,0.203,0.492,0.203c0.179,0,0.357-0.067,0.493-0.203l4.711-4.711l4.71,4.711c0.137,0.136,0.314,0.203,0.494,0.203c0.178,0,0.355-0.067,0.492-0.203c0.273-0.273,0.273-0.715,0-0.986l-4.711-4.711l4.711-4.711C16.172,4.759,16.172,4.317,15.898,4.045z"
-              ></path>
-            </svg>
+            {isAuthed ? (
+              /* exit icon (Log Out) */
+              <svg className="svg-icon" viewBox="0 0 20 20">
+                <path
+                  fill="none"
+                  d="M15.898,4.045c-0.271-0.272-0.713-0.272-0.986,0l-4.71,4.711L5.493,4.045c-0.272-0.272-0.714-0.272-0.986,0s-0.272,0.714,0,0.986l4.709,4.711l-4.71,4.711c-0.272,0.271-0.272,0.713,0,0.986c0.136,0.136,0.314,0.203,0.492,0.203c0.179,0,0.357-0.067,0.493-0.203l4.711-4.711l4.71,4.711c0.137,0.136,0.314,0.203,0.494,0.203c0.178,0,0.355-0.067,0.492-0.203c0.273-0.273,0.273-0.715,0-0.986l-4.711-4.711l4.711-4.711C16.172,4.759,16.172,4.317,15.898,4.045z"
+                ></path>
+              </svg>
+            ) : (
+              /* user icon (Log In / Sign Up) */
+              <svg className="svg-icon" viewBox="0 0 20 20">
+                <path
+                  fill="none"
+                  d="M10,10.9c2.373,0,4.303-1.932,4.303-4.306c0-2.372-1.93-4.302-4.303-4.302S5.696,4.223,5.696,6.594C5.696,8.969,7.627,10.9,10,10.9z M10,3.331c1.801,0,3.266,1.463,3.266,3.263c0,1.802-1.465,3.267-3.266,3.267c-1.8,0-3.265-1.465-3.265-3.267C6.735,4.794,8.2,3.331,10,3.331z"
+                ></path>
+                <path
+                  fill="none"
+                  d="M10,12.503c-4.418,0-7.878,2.058-7.878,4.685c0,0.288,0.231,0.52,0.52,0.52c0.287,0,0.519-0.231,0.519-0.52c0-1.976,3.132-3.646,6.84-3.646c3.707,0,6.838,1.671,6.838,3.646c0,0.288,0.234,0.52,0.521,0.52s0.52-0.231,0.52-0.52C17.879,14.561,14.418,12.503,10,12.503z"
+                ></path>
+              </svg>
+            )}
           </Nav.Link>
           {/* Store */}
           <Nav.Link to="/store" as={NavLink}>
+            {/* shop icon */}
             <svg className="svg-icon" viewBox="0 0 20 20">
               <path
                 fill="none"
@@ -40,13 +73,14 @@ export function Navbar() {
             </svg>
           </Nav.Link>
         </Nav>
-        {cartQuantity > 0 && (
+        {showCartButton && cartQuantity > 0 && (
           <Button
             onClick={openCart}
             style={{ width: "3.5rem", height: "3.5rem", position: "relative" }}
             variant="outline-light"
             className="rounded-circle"
           >
+            {/* cart icon */}
             <svg className="svg-icon" viewBox="0 0 20 20">
               <path
                 fill="none"

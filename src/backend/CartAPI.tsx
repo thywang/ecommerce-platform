@@ -1,4 +1,5 @@
 import axios from "axios";
+import { v4 as uuid } from "uuid";
 import { getUser } from "../service/AuthService";
 import { CartItemProps } from "../components/CartItem";
 
@@ -24,8 +25,27 @@ const cartURL = import.meta.env.VITE_CART_TOKEN_URL;
 
 function getCartID() {
   const user = getUser();
-  const username = user !== "undefined" && user ? user.username : "";
-  return "user#" + username;
+  if (user !== "undefined" && user) {
+    return "user#" + user.username;
+  } else {
+    // guest cart
+    let cart_id = sessionStorage.getItem("cart_id");
+    if (
+      cart_id === "undefined" ||
+      cart_id === undefined ||
+      cart_id === null ||
+      !cart_id
+    ) {
+      // generate guest cart id
+      cart_id = generateGuestCartID();
+      sessionStorage.setItem("cart_id", cart_id);
+    }
+    return cart_id;
+  }
+}
+
+function generateGuestCartID() {
+  return "cart#" + uuid();
 }
 
 export async function getCartItems(): Promise<GetCartAPIProps[]> {

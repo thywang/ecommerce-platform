@@ -28,16 +28,18 @@ export function Store() {
 
   return (
     <>
-      <h2
-        className="my-4"
-        style={{
-          color: Colors.secondary,
-          fontStyle: "italic",
-          fontFamily: "Roboto",
-        }}
-      >
-        Welcome back, {username}
-      </h2>
+      {username.length > 0 && (
+        <h2
+          className="my-4"
+          style={{
+            color: Colors.secondary,
+            fontStyle: "italic",
+            fontFamily: "Roboto",
+          }}
+        >
+          Welcome back, {username}
+        </h2>
+      )}
       <Dropdown className="my-3">
         <Dropdown.Toggle
           id="dropdown-sortby"

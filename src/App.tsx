@@ -1,5 +1,5 @@
 import axios from "axios";
-import PrivateRoute from "./utilities/PrivateRoute";
+import { Navbar } from "./components/Navbar";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import { Store } from "./pages/Store";
@@ -8,6 +8,7 @@ import { ShoppingCartProvider } from "./context/ShoppingCartContext";
 import { StoreItemsProvider } from "./context/StoreItemsContext";
 import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
+import { Container } from "react-bootstrap";
 import {
   getToken,
   setUserSession,
@@ -61,17 +62,19 @@ function App() {
   return (
     <StoreItemsProvider>
       <ShoppingCartProvider>
-        <Routes>
-          <Route path="login" element={<Login />} />
-          <Route path="signup" element={<Signup />} />
+        <Navbar />
+        <Container className="mb-4">
+          <Routes>
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<Signup />} />
 
-          <Route path="/" element={<PrivateRoute />}>
+            <Route path="/" element={<Store />}></Route>
             <Route path="store" element={<Store />} />
             <Route path="products">
               <Route path=":id" element={<Product />} />
             </Route>
-          </Route>
-        </Routes>
+          </Routes>
+        </Container>
       </ShoppingCartProvider>
     </StoreItemsProvider>
   );
