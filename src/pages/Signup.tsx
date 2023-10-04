@@ -62,6 +62,7 @@ export default function Register() {
         await migrateGuestCartItems(user.username);
         resetCartID();
         setSuccessMessage("Sign up successful!");
+        setErrorMessage(null);
       } catch (error) {
         if (axios.isAxiosError(error)) {
           // Access to config, request, and response
