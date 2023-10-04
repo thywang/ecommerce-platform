@@ -21,7 +21,12 @@ export type DeleteCartAPIProps = {
   product_id: number;
 };
 
+export type MigrateCartAPIProps = {
+  cart_id: string;
+};
+
 const cartURL = import.meta.env.VITE_CART_TOKEN_URL;
+const migrateCartURL = import.meta.env.VITE_MIGRATE_CART_TOKEN_URL;
 
 function getCartID() {
   const user = getUser();
@@ -44,8 +49,42 @@ function getCartID() {
   }
 }
 
+export function resetCartID() {
+  sessionStorage.removeItem("cart_id");
+}
+
 function generateGuestCartID() {
   return "cart#" + uuid();
+}
+
+/** Returns cart_id upon successful migration and deletion of guest cart */
+export async function migrateGuestCartItems(
+  username: string
+): Promise<MigrateCartAPIProps> {
+  const guest_cart_id = getCartID();
+  const user_cart_id = "user#" + username;
+
+  const requestConfig = {
+    headers: {
+      "x-api-key": import.meta.env.VITE_X_API_KEY,
+    },
+    params: { old_cart_id: guest_cart_id, new_cart_id: user_cart_id },
+  };
+
+  return axios
+    .post(migrateCartURL, null, requestConfig)
+    .then((response) => {
+      console.log("migration response from databse");
+      console.log(response.data);
+      return response.data;
+    })
+    .catch((error) => {
+      if (error.response.status === 401 || error.response.status === 403) {
+        alert(error.response.data.message);
+      } else {
+        alert("Sorry... the backend server is down! Please try again later");
+      }
+    });
 }
 
 export async function getCartItems(): Promise<GetCartAPIProps[]> {
@@ -141,14 +180,17 @@ export async function deleteItemFromCart(
 /** Unused currently */
 export function removeAllItemsFromCart() {
   const requestConfig = {
-    headers: { "x-api-key": import.meta.env.VITE_X_API_KEY },
+    headers: {
+      "x-api-key": import.meta.env.VITE_X_API_KEY,
+    },
     params: { cart_id: getCartID() },
   };
-  axios
+  return axios
     .delete(cartURL, requestConfig)
     .then((response) => {
+      console.log("delete all response from databse");
       console.log(response.data);
-      alert("Remove all items successful");
+      return response.data;
     })
     .catch((error) => {
       if (error.response.status === 401 || error.response.status === 403) {

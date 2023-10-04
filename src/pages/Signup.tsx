@@ -5,6 +5,7 @@ import { Container, Row, Col, Card, Button, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "../utilities/useForm";
 import { useState } from "react";
+import { migrateGuestCartItems, resetCartID } from "../backend/CartAPI";
 
 const signupUrl = import.meta.env.VITE_SIGNUP_TOKEN_URL;
 
@@ -17,6 +18,7 @@ type SignupUser = {
 export default function Register() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const {
     handleSubmit,
     handleChange,
@@ -46,7 +48,7 @@ export default function Register() {
         },
       },
     },
-    onSubmit: () => {
+    onSubmit: async () => {
       const requestConfig = {
         headers: { "x-api-key": import.meta.env.VITE_X_API_KEY },
       };
@@ -55,21 +57,26 @@ export default function Register() {
         email: user.email,
         password: user.password,
       };
-      axios
-        .post(signupUrl, requestBody, requestConfig)
-        .then((_response) => {
-          setErrorMessage(null);
-          alert("Sign up successful");
-        })
-        .catch((error) => {
-          if (error.response.status === 401 || error.response.status === 403) {
+      try {
+        await axios.post(signupUrl, requestBody, requestConfig);
+        await migrateGuestCartItems(user.username);
+        resetCartID();
+        setSuccessMessage("Sign up successful!");
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          // Access to config, request, and response
+          if (
+            error.response?.status === 401 ||
+            error.response?.status === 403
+          ) {
             setErrorMessage(error.response.data.message);
           } else {
             setErrorMessage(
               "Sorry... the backend server is down! Please try again later"
             );
           }
-        });
+        }
+      }
     },
   });
 
@@ -79,6 +86,7 @@ export default function Register() {
   return (
     <form onSubmit={handleSubmit}>
       {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+      {successMessage && <Alert variant="success">{successMessage}</Alert>}
       <Container fluid>
         <Row className="d-flex justify-content-center align-items-center h-100">
           <Col col="12">
