@@ -5,6 +5,7 @@ import { StoreItemProps } from "../components/StoreItem";
 import { formatCurrency } from "../utilities/formatCurrency";
 import { AddItem } from "../components/AddItem";
 import Colors from "../style/colors";
+import NotFound from "./NotFound";
 
 export function Product() {
   const { id } = useParams();
@@ -13,7 +14,7 @@ export function Product() {
   const item: StoreItemProps | undefined = storeItems.find(
     (item) => item.id === Number(id)
   );
-  if (item == null) return null;
+  if (item == null) return <NotFound />;
 
   return (
     <Container>
