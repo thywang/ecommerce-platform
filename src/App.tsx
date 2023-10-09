@@ -2,6 +2,8 @@ import axios from "axios";
 import { Navbar } from "./components/Navbar";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Success from "./pages/Success";
+import NotFound from "./pages/NotFound";
 import { Store } from "./pages/Store";
 import { Product } from "./pages/Product";
 import { ShoppingCartProvider } from "./context/ShoppingCartContext";
@@ -67,12 +69,14 @@ function App() {
           <Routes>
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
+            <Route path="success" element={<Success />} />
 
             <Route path="/" element={<Store />}></Route>
             <Route path="store" element={<Store />} />
             <Route path="products">
               <Route path=":id" element={<Product />} />
             </Route>
+            <Route path="*" element={<NotFound />}></Route>
           </Routes>
         </Container>
       </ShoppingCartProvider>

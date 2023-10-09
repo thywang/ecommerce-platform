@@ -28,7 +28,7 @@ export type MigrateCartAPIProps = {
 const cartURL = import.meta.env.VITE_CART_TOKEN_URL;
 const migrateCartURL = import.meta.env.VITE_MIGRATE_CART_TOKEN_URL;
 
-function getCartID() {
+export function getCartID() {
   const user = getUser();
   if (user !== "undefined" && user) {
     return "user#" + user.username;
@@ -177,7 +177,6 @@ export async function deleteItemFromCart(
     });
 }
 
-/** Unused currently */
 export function removeAllItemsFromCart() {
   const requestConfig = {
     headers: {

@@ -14,6 +14,8 @@ import {
   updateCartItem,
   addItemToCart,
   deleteItemFromCart,
+  resetCartID,
+  removeAllItemsFromCart,
 } from "../backend/CartAPI";
 
 type ShoppingCartProviderProps = {
@@ -32,6 +34,7 @@ type ShoppingCartContext = {
   increaseCartQuantity: (id: number) => void;
   decreaseCartQuantity: (id: number) => void;
   removeFromCart: (id: number) => void;
+  deleteCartAndResetCartID: () => void;
   cartQuantity: number;
   cartItems: CartItem[];
 };
@@ -123,7 +126,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         // item exists
         if (cartItems[idx].quantity === 1) {
           // remove the item
-          deleteItemFromCart(id);
+          await deleteItemFromCart(id);
           const cartDataItems = [...cartItems];
           cartDataItems.splice(idx, 1);
           setCartItems(cartDataItems);
@@ -151,13 +154,19 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
     }
   };
 
-  function removeFromCart(id: number) {
+  const removeFromCart = async (id: number) => {
     // remove the item
-    deleteItemFromCart(id);
+    await deleteItemFromCart(id);
     setCartItems((currItems) => {
       return currItems.filter((item) => item.id !== id);
     });
-  }
+  };
+
+  const deleteCartAndResetCartID = async () => {
+    setCartItems([]);
+    resetCartID();
+    await removeAllItemsFromCart();
+  };
 
   return (
     <ShoppingCartContext.Provider
@@ -168,6 +177,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         increaseCartQuantity,
         decreaseCartQuantity,
         removeFromCart,
+        deleteCartAndResetCartID,
         cartItems,
         cartQuantity,
       }}
