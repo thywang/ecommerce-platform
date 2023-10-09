@@ -59,7 +59,7 @@ export default function Register() {
       };
       try {
         await axios.post(signupUrl, requestBody, requestConfig);
-        await migrateGuestCartItems(user.username);
+        await migrateGuestCartItems(user.username.toLowerCase().trim());
         resetCartID();
         setSuccessMessage("Sign up successful!");
         setErrorMessage(null);
