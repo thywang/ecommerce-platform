@@ -15,10 +15,10 @@ type SharedColors = typeof sharedColors;
 export type TColors = ColorTheme & SharedColors;
 
 const Colors = {
-  primary: "#E6E6FA",
-  secondary: "#8A2BE2",
+  primary: "#CAF0F8",
+  secondary: "#0077b6",
   textPrimary: "#161629",
-  textSecondary: "#663399",
+  textSecondary: "#023E8A",
   ...sharedColors,
 };
 
