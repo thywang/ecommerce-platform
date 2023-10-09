@@ -10,10 +10,12 @@ import {
 } from "../service/AuthService";
 
 export default function Success() {
-  const { deleteCartAndResetCartID } = useShoppingCart();
+  const { resetCartAndCartID, deleteCart } = useShoppingCart();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(window.location.search);
   const sessionID = getCheckoutSessionID();
+
+  resetCartAndCartID(); // clear cart at render
 
   useEffect(() => {
     const querySessionID = queryParams.get("session_id");
@@ -22,7 +24,7 @@ export default function Success() {
     if (!querySessionID || querySessionID !== sessionID) {
       navigate("/");
     } else {
-      deleteCartAndResetCartID();
+      deleteCart();
       console.log("successfully cleared cart!");
     }
     resetCheckoutSessionID();

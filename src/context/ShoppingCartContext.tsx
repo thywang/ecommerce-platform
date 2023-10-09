@@ -34,7 +34,8 @@ type ShoppingCartContext = {
   increaseCartQuantity: (id: number) => void;
   decreaseCartQuantity: (id: number) => void;
   removeFromCart: (id: number) => void;
-  deleteCartAndResetCartID: () => void;
+  resetCartAndCartID: () => void;
+  deleteCart: () => void;
   cartQuantity: number;
   cartItems: CartItem[];
 };
@@ -162,9 +163,12 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
     });
   };
 
-  const deleteCartAndResetCartID = async () => {
+  const resetCartAndCartID = () => {
     setCartItems([]);
     resetCartID();
+  };
+
+  const deleteCart = async () => {
     await removeAllItemsFromCart();
   };
 
@@ -177,7 +181,8 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         increaseCartQuantity,
         decreaseCartQuantity,
         removeFromCart,
-        deleteCartAndResetCartID,
+        resetCartAndCartID,
+        deleteCart,
         cartItems,
         cartQuantity,
       }}

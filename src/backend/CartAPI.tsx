@@ -16,9 +16,13 @@ export type UpdateCartAPIProps = {
   quantity: number;
 };
 
-export type DeleteCartAPIProps = {
+export type DeleteCartItemAPIProps = {
   cart_id: string;
   product_id: number;
+};
+
+export type DeleteCartAPIProps = {
+  cart_id: string;
 };
 
 export type MigrateCartAPIProps = {
@@ -156,7 +160,7 @@ export async function addItemToCart(
 
 export async function deleteItemFromCart(
   product_id: number
-): Promise<DeleteCartAPIProps> {
+): Promise<DeleteCartItemAPIProps> {
   const requestConfig = {
     headers: { "x-api-key": import.meta.env.VITE_X_API_KEY },
     params: { cart_id: getCartID(), product_id: product_id },
@@ -177,7 +181,7 @@ export async function deleteItemFromCart(
     });
 }
 
-export function removeAllItemsFromCart() {
+export function removeAllItemsFromCart(): Promise<DeleteCartAPIProps> {
   const requestConfig = {
     headers: {
       "x-api-key": import.meta.env.VITE_X_API_KEY,
